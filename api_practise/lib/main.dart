@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:api_practise/screen/home.dart';
 
 
-void main(){
+void main(){//main function
   runApp(const MyApp());
 }
 

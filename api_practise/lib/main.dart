@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:api_practise/screen/home.dart';
 
 
-void main(){//main function
+void main(){//main function in adding_model
   runApp(const MyApp());
 }
 

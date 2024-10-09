@@ -13,12 +13,21 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<User> users = [];
 
+  //in stfl widget there is initState method
+  @override
+  void initState(){
+    super.initState();  //whenever this widget is rendered, initState is called
+    fetchUsers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         title: const Text('Rest API Call'),
       ),
+
       body: ListView.builder(
         itemCount: users.length,
         itemBuilder: (context,index){
@@ -26,22 +35,18 @@ class _HomeScreenState extends State<HomeScreen> {
           final color = user.gender == 'male'? const Color.fromARGB(255, 196, 229, 244): Colors.white;
 
           //print(email); // Check if the URL is valid
-
           return ListTile(
-            title: Text(user.name.first),
+            title: Text(user.name.fullName),
             subtitle: Text(user.phone),
             tileColor: color,
           );
-
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: fetchUsers,
-      ),
+
     );
   }
 
-  void fetchUsers() async{
+  Future<void> fetchUsers() async{
 
     print('fetchUsers called');
 
@@ -53,24 +58,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final json = jsonDecode(body);//response will be in form of string, use json decode to parse the string and return it
     final results = json['results'] as List<dynamic>;
 
-    final transformed = results.map((e) {
-      final name = UserName( 
-        title: e['name']['title'],
-        first: e['name']['first'],
-        last: e['name']['last'],
-      );
-      return User(
-        cell: e['cell'],
-        email: e['email'],
-        gender: e['gender'],
-        nat: e['nat'],
-        phone: e['phone'],
-        name: name,
-      );
-    }).toList();
-    setState(() {
+    final transformed = results.map((e) => User.fromJson(e)).toList();
+
+    setState(() {   //setState can't be called outside of that Stateful Widget
       users = transformed; // the key is results, like data array in the assignment, here we give the key
     });
+
     print('fetchUsers completed');
 
   }
